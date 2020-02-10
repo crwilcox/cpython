@@ -537,6 +537,18 @@ non-important content
                              """f'{"s"!{"r"}}'""",
                              ])
 
+    def test_format_specifier_expressions_escaped_curly(self):
+        # Currently failing test case due to defect. I suspect the issue is
+        # in /Python/ast.c around L5240
+        import datetime
+        value = datetime.datetime.now()
+
+        # Currently raises NameError: name 'a' is not defined
+        self.assertEqual(f"result: {value:{{a}}.{{b}}}", "{a}.{b}")
+
+        # Currently raises SyntaxError: f-string: expecting '}'
+        self.assertEqual(f"result: {value:{{}", "{")
+
     def test_side_effect_order(self):
         class X:
             def __init__(self):
